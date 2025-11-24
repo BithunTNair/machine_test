@@ -1,7 +1,9 @@
 import React from 'react'
 import { ShoppingCart, Menu, ChevronDown, Globe } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate= useNavigate();
   return (
     <>
       <header className="w-full bg-white">
@@ -36,9 +38,9 @@ const Navbar = () => {
               <span className="font-medium">& Orders</span>
             </button>
 
-            <a href="#" className="relative flex items-center gap-2">
-              <ShoppingCart size={20} />
-              <span className="text-sm font-medium">Cart</span>
+            <a className="relative flex items-center gap-2">
+              <ShoppingCart size={20} onClick={()=>{navigate('/cart')}}  />
+              <span className="text-sm font-medium" >Cart</span>
               <span className="absolute -top-2 -right-3 bg-yellow-400 text-black text-xs font-semibold rounded-full px-2">0</span>
             </a>
           </div>

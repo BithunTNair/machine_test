@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { errorToast, successToast } from "../../Plugins/toast";
 
 const SignUp = () => {
@@ -22,7 +22,7 @@ const SignUp = () => {
       }).then((response) => {
         console.log(response.data);
        successToast('User Registered Successfully')
-        // localStorage.setItem("user", JSON.stringify(response.data.user));
+     
         navigate('/login')
       });
     } catch (error) {

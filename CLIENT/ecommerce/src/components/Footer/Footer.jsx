@@ -4,12 +4,11 @@ const Footer = () => {
   return (
     <div>
         <footer className="bg-[#232F3E] text-gray-200 text-sm">
-      {/* Back to top */}
+   
       <div className="bg-[#37475A] text-center py-3 text-white text-sm hover:bg-[#485769] cursor-pointer">
         Back to Top
       </div>
-
-      {/* Top footer links */}
+ 
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div>
           <h3 className="font-semibold mb-3">Get to Know Us</h3>
@@ -56,7 +55,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Middle bar */}
+  
       <div className="border-t border-gray-700 py-6 flex flex-col md:flex-row items-center justify-center gap-4">
         <div className="flex items-center space-x-2">
           <span className="text-xl font-bold text-white">amazon</span>
@@ -72,7 +71,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom links */}
+    
       <div className="bg-[#131A22] text-gray-400 text-xs py-6 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center md:text-left">
           <div>
@@ -97,7 +96,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Footer bottom text */}
+     
         <div className="text-center mt-6 space-x-4">
           <a href="#" className="hover:underline text-gray-300">Conditions of Use & Sale</a>
           <a href="#" className="hover:underline text-gray-300">Privacy Notice</a>

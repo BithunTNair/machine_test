@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { errorToast, successToast } from "../../Plugins/toast";
 
 const LogIn = () => {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -19,58 +19,57 @@ const LogIn = () => {
         method: "POST",
         url: `${import.meta.env.VITE_BASE_URL}/auth/login`,
         data: data,
-      }).then((response) => {
-        console.log(response.data);
-        successToast('LogIn Successful')
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-            //  localStorage.setItem("token", JSON.stringify(response.data.user));
-        navigate('/home')
-      }).catch((error)=>{
-         console.log(error);
-         
-      });
+      })
+        .then((response) => {
+          console.log(response.data);
+          successToast("LogIn Successful");
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          localStorage.setItem("token", JSON.stringify(response.data.token));
+          navigate("/home");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } catch (error) {
       console.log(error);
-      errorToast("something went wrong")
-    }};
+      errorToast("something went wrong");
+    }
+  };
   return (
     <div>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      
         <h1 className="text-3xl font-semibold mb-6">
           <span className="text-black">amazon</span>
           <span className="text-orange-500">.in</span>
         </h1>
 
-       
         <div className="bg-white w-96 rounded-md shadow-sm border border-gray-200 p-6">
           <h2 className="text-2xl font-semibold mb-4">Sign in</h2>
 
-          <form  onSubmit={handleSubmit(onSubmit)} >
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col space-y-3">
-            <div>
-              <label className="text-sm font-medium">
-                Email
-              </label>
-              <input
-              {...register('email',{required:true})}
-                type="text"
-                className="mt-1 w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-yellow-400 focus:outline-none"
-              />
-                <label className="text-sm font-medium">
-                Password
-              </label>
-              <input
-                   {...register('password' , {required:true})}
-                type="password"
-                className="mt-1 w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-yellow-400 focus:outline-none"
-              />
-            </div>
+              <div>
+                <label className="text-sm font-medium">Email</label>
+                <input
+                  {...register("email", { required: true })}
+                  type="text"
+                  className="mt-1 w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-yellow-400 focus:outline-none"
+                />
+                <label className="text-sm font-medium">Password</label>
+                <input
+                  {...register("password", { required: true })}
+                  type="password"
+                  className="mt-1 w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-yellow-400 focus:outline-none"
+                />
+              </div>
 
-            <button type="submit" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium rounded-md py-2 mt-2">
-              Continue
-            </button>
-          </div>
+              <button
+                type="submit"
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium rounded-md py-2 mt-2"
+              >
+                Continue
+              </button>
+            </div>
           </form>
 
           <p className="mt-4 text-sm text-gray-600">
@@ -101,7 +100,6 @@ const LogIn = () => {
           </div>
         </div>
 
-   
         <div className="w-96 mt-6 text-center">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -134,21 +132,6 @@ const LogIn = () => {
           </button>
         </div>
 
-   
-        <div className="mt-8 text-xs text-gray-500 text-center space-x-3">
-          <a href="#" className="hover:underline">
-            Conditions of Use
-          </a>
-          <a href="#" className="hover:underline">
-            Privacy Notice
-          </a>
-          <a href="#" className="hover:underline">
-            Help
-          </a>
-          <p className="mt-2">
-            © 1996–2024, Amazon.com, Inc. or its affiliates
-          </p>
-        </div>
       </div>
     </div>
   );

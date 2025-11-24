@@ -1,6 +1,8 @@
 const PRODUCTS = require('../../models/productModel');
-const CART= require('../../models/cartModel');
-const getProductById = async (req, res) => {
+const CART = require('../../models/cartModel');
+const USERS = require('../../models/userModel');
+const ORDERS = require('../../models/orderModel');
+const fetchProductById = async (req, res) => {
     console.log('hitted');
 
     const productId = req.params.id;
@@ -10,16 +12,37 @@ const getProductById = async (req, res) => {
         if (!productId) {
             return res.status(400).json({ message: 'Product ID is required' });
         }
-        const product = await PRODUCTS.findById(productId).populate('artisan', 'fullName email mobileNumber');
+
+        const product = await PRODUCTS.findById(productId).populate({
+            path: 'reviews.userId',
+            select: 'fullName email'
+        });
+
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+
         return res.status(200).json({ message: 'Get your product', product });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'something went wrong' });
     }
 };
+
+const fetchProductsByPagination = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const skip = (page - 1) * limit;
+
+    try {
+        const products = await PRODUCTS.find().skip(skip).limit(limit);
+        const total = await PRODUCTS.countDocuments();
+        return res.status(200).json({ message: 'Products By Page', Products: products, page, limit, totalPages: Math.ceil(total / limit) });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'something went wrong' });
+    }
+}
 
 
 const addToCart = async (req, res) => {
@@ -67,6 +90,55 @@ const addToCart = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'something went wrong' });
+    }
+};
+
+const updateQuantity = async (req, res) => {
+    const { userId } = req.params;
+    const { productId, quantity } = req.body;
+
+    try {
+
+        const cart = await CART.findOne({ userId });
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+
+        await cart.populate('products.productId');
+
+
+        const productIndex = cart.products.findIndex(
+            (p) => p.productId && p.productId._id.toString() === productId
+        );
+
+        if (productIndex === -1) {
+            return res.status(404).json({ message: 'Product not found in cart' });
+        }
+
+
+        if (quantity > 0) {
+            cart.products[productIndex].quantity = quantity;
+        } else {
+
+            cart.products.splice(productIndex, 1);
+        }
+
+
+        cart.totalPrice = cart.products.reduce((acc, item) => {
+            if (item.productId && typeof item.productId.price === 'number') {
+                return acc + item.quantity * item.productId.price;
+            }
+            return acc;
+        }, 0);
+
+
+        await cart.save();
+
+        return res.status(200).json({ message: 'Cart updated successfully', cart });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
@@ -147,6 +219,65 @@ const getCart = async (req, res) => {
     }
 };
 
+const createOrder = async (req, res) => {
+    try {
+        const { cartId } = req.params;
+
+        const cart = await CART.findById(cartId);
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        if (!Array.isArray(cart.products) || cart.products.length === 0) {
+            return res.status(400).json({ message: 'Cart is empty' });
+        }
+
+        const totalPrice = Number(cart.totalPrice || 0);
+
+        const order = await ORDERS.create({
+            userId: cart.userId,
+            products: cart.products.map(p => ({
+                productId: p.productId,
+                quantity: p.quantity || 1
+            })),
+            totalPrice,
+            status: 'placed'
+        });
+
+        return res.status(201).json({
+            message: 'Order created from cart',
+            order,
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+const viewOrders = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+       
+        const orders = await ORDERS.find({ userId })
+            .populate("products.productId")     
+            .sort({ createdOn: -1 });        
+
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({  message: "No orders found" });
+        }
+
+        return res.status(200).json({
+            count: orders.length,
+            orders,
+        });
+
+    } catch (error) {
+        console.error( error);
+        return res.status(500).json({ message: "Something went wrong" });
+    }
+}
 
 
-module.exports = { getProductById, addToCart,removeFromCart,getCart,filterProducts }
+
+module.exports = { fetchProductById, fetchProductsByPagination, addToCart, updateQuantity, removeFromCart, getCart, filterProducts, createOrder, viewOrders }
