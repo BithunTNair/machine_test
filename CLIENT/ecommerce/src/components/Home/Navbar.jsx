@@ -16,14 +16,14 @@ const Navbar = () => {
           </div>
 
        
-          <div className="hidden sm:flex flex-1 mx-6 items-center gap-2">
+          {/* <div className="hidden sm:flex flex-1 mx-6 items-center gap-2">
             <input
               type="search"
               placeholder="Search Amazon"
               className="flex-1 px-3 py-2 text-sm border rounded"
             />
             <button className="px-3 py-2 bg-yellow-400 rounded">Search</button>
-          </div>
+          </div> */}
 
         
           <div className="flex items-center gap-4">
