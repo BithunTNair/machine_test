@@ -19,27 +19,29 @@ const SignUp = () => {
         method: "POST",
         url: `${import.meta.env.VITE_BASE_URL}/auth/signup`,
         data: data,
-      }).then((response) => {
-        console.log(response.data);
-       successToast('User Registered Successfully')
-     
-        navigate('/login')
-      });
+      })
+        .then((response) => {
+          console.log(response.data);
+          successToast("User Registered Successfully");
+
+          navigate("/login");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } catch (error) {
       console.log(error);
-     errorToast('Something Went Wrong')
+      errorToast("Something Went Wrong");
     }
   };
   return (
     <div>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      
         <h1 className="text-3xl font-semibold mb-6">
           <span className="text-black">amazon</span>
           <span className="text-orange-500">.in</span>
         </h1>
 
-      
         <div className="bg-white w-96 rounded-md shadow-sm border border-gray-200 p-6">
           <h2 className="text-2xl font-semibold mb-4">Create Account</h2>
 
@@ -49,7 +51,7 @@ const SignUp = () => {
                 <label className="text-sm font-medium">Your name</label>
                 <input
                   {...register("fullName", { required: true })}
-                  name="name"
+                  name="fullName"
                   type="text"
                   className="mt-1 w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-1 focus:ring-yellow-400 focus:outline-none"
                 />
